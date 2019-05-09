@@ -18,30 +18,25 @@ export default class App extends Component {
     };
   }
   onInputChange = event => {
-    console.log(event.target.value);
     this.setState({ input: event.target.value });
   };
 
   onSubmit = () => {
-    console.log("here");
     this.setState({ imageURL: this.state.input });
-
-    // app.models
-    //   .initModel({
-    //     id: Clarifai.COLOR_MODEL
-    //   })
-    //   .then(generalModel => {
-    //     return generalModel.predict(
-    //       "https://samples.clarifai.com/metro-north.jpg"
-    //     );
-    //   })
-    //   .then(response => {
-    //     var concepts = response["outputs"][0]["data"]["concepts"];
-    //     console.log(
-    //       "concepts: " +
-    //         JSON.stringify(response["outputs"][0]["data"]["colors"])
-    //     );
-    //   });
+    app.models
+      .initModel({
+        id: Clarifai.FACE_DETECT_MODEL
+      })
+      .then(generalModel => {
+        return generalModel.predict(this.state.input);
+      })
+      .then(response => {
+        console.log(
+          response["outputs"][0]["data"]["regions"][0]["region_info"][
+            "bounding_box"
+          ]
+        );
+      });
   };
   render() {
     console.log("image url:" + this.state.imageURL);
