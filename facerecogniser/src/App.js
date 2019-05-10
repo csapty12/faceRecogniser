@@ -14,9 +14,16 @@ export default class App extends Component {
     super(props);
     this.state = {
       input: "",
-      imageURL: ""
+      imageURL: "",
+      box: {}
     };
   }
+
+  calculateFaceLocation = data => {
+    const clarifaiFace =
+      data["outputs"][0]["data"]["regions"][0]["region_info"]["bounding_box"];
+  };
+
   onInputChange = event => {
     this.setState({ input: event.target.value });
   };
@@ -31,12 +38,9 @@ export default class App extends Component {
         return generalModel.predict(this.state.input);
       })
       .then(response => {
-        console.log(
-          response["outputs"][0]["data"]["regions"][0]["region_info"][
-            "bounding_box"
-          ]
-        );
-      });
+        this.calculateFaceLocation(response);
+      })
+      .catch(err => console.log(err));
   };
   render() {
     console.log("image url:" + this.state.imageURL);
