@@ -21,23 +21,25 @@ export default class App extends Component {
 
   calculateFaceLocation = data => {
     const clarifaiFace =
-      data["outputs"][0]["data"]["regions"][0]["region_info"]["bounding_box"];
+      data.outputs[0].data.regions[0].region_info.bounding_box;
     console.log(clarifaiFace);
     const image = document.getElementById("inputImage");
     const width = Number(image.width);
     const height = Number(image.height);
-    console.log("width: " + width + " height: " + height);
+    console.log("width: " + width + ", height: " + height);
+    const rightColW = clarifaiFace.right_col * width;
+    const bottomRowH = clarifaiFace.bottom_row * height;
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
-      rightCol: width - clarifaiFace.right_col * width,
-      botomRow: height - clarifaiFace.bottom_row * height
+      rightCol: width - rightColW,
+      bottomRow: height - bottomRowH
     };
   };
 
-  displayFaceBox = boxPoints => {
-    console.log("box points: " + JSON.stringify(boxPoints));
-    this.setState({ box: boxPoints });
+  displayFaceBox = box => {
+    console.log(box);
+    this.setState({ box: box });
   };
 
   onInputChange = event => {
