@@ -1,9 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import "./App.css";
 import Navigation from "./components/Naviation/Navigation";
 import ImageLinkForm from "./components/Form/imageLinkForm/ImageLinkForm";
 import Clarifai from "clarifai";
 import FaceDetector from "./components/faceDetector/FaceDetector";
+import SignInForm from "./components/Form/signInForm/SignInForm";
+import RegisterForm from "./components/Form/registerForm/RegisterForm";
 
 const app = new Clarifai.App({
   apiKey: "5aa74e0a862449f286b86d7501494b4e"
@@ -15,7 +17,8 @@ export default class App extends Component {
     this.state = {
       input: "",
       imageURL: "",
-      box: {}
+      box: {},
+      route: "signin"
     };
   }
 
@@ -59,16 +62,27 @@ export default class App extends Component {
       .then(faceBox => this.displayFaceBox(faceBox))
       .catch(err => console.log(err));
   };
+
+  onRouteChange = route => {
+    this.setState({ route: route });
+  };
   render() {
     return (
       <div className="App">
-        <Navigation />
-        <ImageLinkForm
-          onInputChange={this.onInputChange}
-          onSubmit={this.onSubmit}
-        />
-
-        <FaceDetector url={this.state.imageURL} box={this.state.box} />
+        <Navigation onRouteChange={this.onRouteChange} />
+        {this.state.route === "home" ? (
+          <Fragment>
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onSubmit={this.onSubmit}
+            />
+            <FaceDetector url={this.state.imageURL} box={this.state.box} />
+          </Fragment>
+        ) : this.state.route === "register" ? (
+          <RegisterForm onRouteChange={this.onRouteChange} />
+        ) : (
+          <SignInForm onRouteChange={this.onRouteChange} />
+        )}
       </div>
     );
   }
