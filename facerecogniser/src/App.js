@@ -18,18 +18,17 @@ export default class App extends Component {
       input: "",
       imageURL: "",
       box: {},
-      route: "signin"
+      route: "signin",
+      isSignedIn: false
     };
   }
 
   calculateFaceLocation = data => {
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
-    console.log(clarifaiFace);
     const image = document.getElementById("inputImage");
     const width = Number(image.width);
     const height = Number(image.height);
-    console.log("width: " + width + ", height: " + height);
     const rightColW = clarifaiFace.right_col * width;
     const bottomRowH = clarifaiFace.bottom_row * height;
     return {
@@ -41,7 +40,6 @@ export default class App extends Component {
   };
 
   displayFaceBox = box => {
-    console.log(box);
     this.setState({ box: box });
   };
 
@@ -64,21 +62,30 @@ export default class App extends Component {
   };
 
   onRouteChange = route => {
+    if (route === "signout") {
+      this.setState({ isSignedIn: false });
+    } else {
+      this.setState({ isSignedIn: true });
+    }
     this.setState({ route: route });
   };
   render() {
+    const { route, isSignedIn, imageURL, box } = this.state;
     return (
       <div className="App">
-        <Navigation onRouteChange={this.onRouteChange} />
-        {this.state.route === "home" ? (
+        <Navigation
+          onRouteChange={this.onRouteChange}
+          isSignedIn={isSignedIn}
+        />
+        {route === "home" ? (
           <Fragment>
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onSubmit={this.onSubmit}
             />
-            <FaceDetector url={this.state.imageURL} box={this.state.box} />
+            <FaceDetector url={imageURL} box={box} />
           </Fragment>
-        ) : this.state.route === "register" ? (
+        ) : route === "register" ? (
           <RegisterForm onRouteChange={this.onRouteChange} />
         ) : (
           <SignInForm onRouteChange={this.onRouteChange} />
