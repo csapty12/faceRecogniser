@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+var cors = require("cors");
 
 const app = express();
 
@@ -21,6 +22,7 @@ let db = {
     }
   ]
 };
+app.use(cors());
 app.use(bodyParser.json());
 app.get("/", (req, res) => {
   res.json(db.users);
