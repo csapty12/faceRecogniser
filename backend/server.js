@@ -9,14 +9,14 @@ let db = {
     {
       id: "1",
       name: "test1",
-      email: "test1",
-      password: "test1",
+      email: "a@a.com",
+      password: "a",
       joined: new Date()
     },
     {
       id: "2",
       name: "test2",
-      email: "test2",
+      email: "test2@test.com",
       password: "test2",
       joined: new Date()
     }
@@ -29,9 +29,10 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signin", (req, res) => {
+  console.log(req.body);
   if (
     db.users[0].email === req.body.email &&
-    db.users[0].email === req.body.password
+    db.users[0].password === req.body.password
   ) {
     return res.json("success");
   }
@@ -60,6 +61,6 @@ app.get("/profile/:id", (req, res) => {
   });
   return res.status(404).json("no user found");
 });
-app.listen(3000, () => {
-  console.log("app deployed on port 3000");
+app.listen(3002, () => {
+  console.log("app deployed on port 3002");
 });
