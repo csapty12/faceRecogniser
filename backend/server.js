@@ -24,6 +24,7 @@ let db = {
 };
 app.use(cors());
 app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
   res.json(db.users);
 });

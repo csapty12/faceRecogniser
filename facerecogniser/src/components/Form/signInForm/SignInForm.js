@@ -77,7 +77,7 @@ export default class SignInForm extends Component {
             </div>
             <div className="lh-copy mt3">
               <p
-                onClick={() => onRouteChange("home")}
+                onClick={() => onRouteChange("register")}
                 className="f6 link dim black db pointer"
               >
                 Sign up

@@ -19,7 +19,13 @@ export default class App extends Component {
       imageURL: "",
       box: {},
       route: "signin",
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: "",
+        name: "",
+        email: "",
+        joined: ""
+      }
     };
   }
 
@@ -47,6 +53,16 @@ export default class App extends Component {
     this.setState({ input: event.target.value });
   };
 
+  loadUser = data => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        joined: data.joined
+      }
+    });
+  };
   onSubmit = () => {
     this.setState({ imageURL: this.state.input });
     app.models
@@ -86,7 +102,10 @@ export default class App extends Component {
             <FaceDetector url={imageURL} box={box} />
           </Fragment>
         ) : route === "register" ? (
-          <RegisterForm onRouteChange={this.onRouteChange} />
+          <RegisterForm
+            onRouteChange={this.onRouteChange}
+            loadUser={this.loadUser}
+          />
         ) : (
           <SignInForm onRouteChange={this.onRouteChange} />
         )}
