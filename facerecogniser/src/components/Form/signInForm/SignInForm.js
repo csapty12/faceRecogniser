@@ -16,8 +16,6 @@ export default class SignInForm extends Component {
   };
 
   onSigninSubmit = () => {
-    // console.log(this.state);
-
     const { email, password } = this.state;
     fetch("http://localhost:3002/signin", {
       method: "post",
@@ -29,7 +27,7 @@ export default class SignInForm extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        if (data === "success") {
+        if (data.id) {
           this.props.onRouteChange("home");
         }
       });
@@ -67,7 +65,7 @@ export default class SignInForm extends Component {
                 />
               </div>
             </fieldset>
-            <div className="">
+            <div>
               <input
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="submit"

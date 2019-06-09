@@ -11,7 +11,6 @@ const database = knex({
     user: "postgres",
     password: "password",
     database: "postgres",
-    // schema: "face_detector",
     port: "54322"
   }
 });
@@ -24,29 +23,14 @@ database
   });
 const app = express();
 
-let db = {
-  users: [
-    {
-      id: "1",
-      name: "test1",
-      email: "a@a.com",
-      password: "a",
-      joined: new Date()
-    },
-    {
-      id: "2",
-      name: "test2",
-      email: "test2@test.com",
-      password: "test2",
-      joined: new Date()
-    }
-  ]
-};
 app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.json(db.users);
+  return database
+    .select("*")
+    .from("users")
+    .then(data => res.json(data));
 });
 
 app.post("/signin", (req, res) => {
@@ -61,14 +45,12 @@ app.post("/signin", (req, res) => {
           .select("*")
           .from("users")
           .where("email", "=", req.body.email)
-          .then(user => {
-            res.json(user[0]);
-          })
-          .catch(err => res.status(400).json("unable to fetch user"));
+          .then(user => res.send(user[0]))
+          .catch(() => res.status(400).json("unable to fetch user"));
       }
       return res.status(400).json("username and password mismatch");
     })
-    .catch(err => res.status(400).json("username and password mismatch"));
+    .catch(() => res.status(400).json("username and password mismatch"));
 });
 
 app.post("/register", (req, res) => {
@@ -95,7 +77,7 @@ app.post("/register", (req, res) => {
         .then(trx.commit)
         .catch(trx.rollback);
     })
-    .catch(e => res.status(400).json("unable to register"));
+    .catch(() => res.status(400).json("unable to register"));
 });
 
 app.get("/profile/:id", (req, res) => {
