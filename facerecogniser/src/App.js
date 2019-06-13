@@ -2,14 +2,10 @@ import React, { Component, Fragment } from "react";
 import "./App.css";
 import Navigation from "./components/Naviation/Navigation";
 import ImageLinkForm from "./components/Form/imageLinkForm/ImageLinkForm";
-import Clarifai from "clarifai";
+// import Clarifai from "clarifai";
 import FaceDetector from "./components/faceDetector/FaceDetector";
 import SignInForm from "./components/Form/signInForm/SignInForm";
 import RegisterForm from "./components/Form/registerForm/RegisterForm";
-
-const app = new Clarifai.App({
-  apiKey: "5aa74e0a862449f286b86d7501494b4e"
-});
 
 const initialState = {
   input: "",
@@ -66,13 +62,21 @@ export default class App extends Component {
   };
   onSubmit = () => {
     this.setState({ imageURL: this.state.input });
-    app.models
-      .initModel({
-        id: Clarifai.FACE_DETECT_MODEL
+    // app.models
+    //   .initModel({
+    //     id: Clarifai.FACE_DETECT_MODEL
+    //   })
+    //   .then(generalModel => {
+    //     return generalModel.predict(this.state.input);
+    //   })
+    fetch("http://localhost:3002/detect", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: this.state.input
       })
-      .then(generalModel => {
-        return generalModel.predict(this.state.input);
-      })
+    })
+      .then(response => response.json())
       .then(response => this.calculateFaceLocation(response))
       .then(faceBox => this.displayFaceBox(faceBox))
       .catch(err => console.log(err));

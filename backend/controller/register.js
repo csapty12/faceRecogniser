@@ -1,5 +1,8 @@
 const handleRegister = (req, res, database, bcrypt) => {
   const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json("invalid user details");
+  }
   const hash = bcrypt.hashSync(password, 0);
 
   database
